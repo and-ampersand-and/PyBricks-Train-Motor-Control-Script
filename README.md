@@ -2,8 +2,10 @@
 
 This script allows you to control Lego Trains via PyBricks without using the official Powered Up App.
 
-This is based on Lok24's design, but made compatible with the current PyBricks version v3.2.3.
+Origionally, this was a modification of a script Lok24 designed, but was incompatible with the latest version of PyBricks (v3.2.x). I updated the script to work with modern versions of PyBricks.
 
-More information about the origional by Lok24: https://www.eurobricks.com/forum/index.php?/forums/topic/187081-control-your-trains-without-smart-device-with-pybricks/
+Since then, Lok24 has provided his own updated version of the script with modern PyBricks support, and I have replaced my changes with his.
+
+More information about the script from Lok24: https://www.eurobricks.com/forum/index.php?/forums/topic/187081-control-your-trains-without-smart-device-with-pybricks/
 
 PyBricks: https://code.pybricks.com/
