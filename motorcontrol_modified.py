@@ -4,7 +4,7 @@
 # uses https://code.pybricks.com/ , LEGO City hub, LEGO remote control
 # connect 1 or 2 motors of any kind to Port A and/or B
 #
-# Version 3.0  
+# Version 2_9
 # -----------------------------------------------/
 from pybricks.parameters import * # Color
 
@@ -23,7 +23,7 @@ Profil_B = (10,500,5,200)   #min,max,step,acc
 dirMotorA = 1       # Direction 1 or -1
 dirMotorB = -1       # Direction 1 or -1
 
-autoacc = True      # accelarate continously when holding butten 
+autoacc = False      # accelarate continously when holding butten 
 
 # -----------------------------------------------
 #  Set general values
@@ -207,8 +207,14 @@ def drive():
             # set speed and direction
             s = v*round(motor[x].getDir())
             # real motor commands depending on motor type
-            if motor[x].getDir() != 0 and motor[x].getType() == "Motor" : motor[x].obj.run(s*motor[x].getSpeed()) #  in 2.7
-            if motor[x].getDir() != 0 and motor[x].getType() == "DCMotor" : motor[x].obj.dc(s) 
+            if motor[x].getType() == "Motor" :
+                motor[x].obj.run(s*motor[x].getSpeed()) #  in 2.7
+            if motor[x].getType() == "DCMotor" : 
+                motor[x].obj.dc(s) 
+            if v == 0 and motor[x].getType() != "---":  
+                print("stop",x)
+                motor[x].obj.stop()      
+            #if motor[x].getDir() != 0 and motor[x].getType() == "DCMotor" : motor[x].obj.dc(s) 
         vold = v
             
 # ----portcheck -------------------------------------------
@@ -250,8 +256,10 @@ def portcheck(i):
             motor[i].obj = Motor(port)
 
             #new in 2.7
+            # if motor[x].getDir() != 0 and motor[x].getType() == "Motor" : motor[x].obj.run(s*motor[x].getSpeed()) #  in 2.7
             devs_max_speed = {38:1530,46:1890,47:1980,48:1367,49:1278,75:1367,76:1278 }
             dspeed = devs_max_speed.get(PUPDevice(port).info()['id'], 1000)
+            motor[i].obj.stop()
             motor[i].obj.control.limits(speed=dspeed,acceleration=10000)
             motor[i].setSpeed(dspeed/100*0.9)
 
