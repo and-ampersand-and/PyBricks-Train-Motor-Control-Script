@@ -54,7 +54,7 @@ LED_B = Color.RED*0.5      # Remote Profil_B, color * brightness
 #  Import classes and functions
 # -----------------------------------------------
 
-from pybricks.pupdevices import DCMotor, Motor, Remote
+from pybricks.pupdevices import DCMotor, Motor, Remote, Light
 from pybricks.parameters import Port, Stop, Button, Color
 from pybricks.hubs import CityHub
 from pybricks.tools import wait, StopWatch
@@ -224,6 +224,7 @@ def portcheck(i):
     devices = {
     1: "Wedo 2.0 DC Motor",
     2: "Train DC Motor",
+    8: "Light",
     38: "BOOST Interactive Motor",
     46: "Technic Large Motor",
     47: "Technic Extra Large Motor",
@@ -267,6 +268,11 @@ def portcheck(i):
         if "DC" in devices[id]:
             motor[i].setType("DCMotor")
             motor[i].obj = DCMotor(port)
+
+        if "Light" in devices[id]:
+            motor[i].setType("Light")
+            motor[i].obj = Light(port)
+            motor[i].obj.on(100)
 
         wait(100)    
         print ("--")
