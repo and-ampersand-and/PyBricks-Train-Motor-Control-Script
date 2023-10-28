@@ -211,7 +211,7 @@ def drive():
                 motor[x].obj.run(s*motor[x].getSpeed()) #  in 2.7
             if motor[x].getType() == "DCMotor" : 
                 motor[x].obj.dc(s) 
-            if v == 0 and motor[x].getType() != "---":  
+            if v == 0 and (motor[x].getType() == "Motor" or motor[x].getType() == "DCMotor"):  
                 print("stop",x)
                 motor[x].obj.stop()      
             #if motor[x].getDir() != 0 and motor[x].getType() == "DCMotor" : motor[x].obj.dc(s) 
@@ -267,13 +267,14 @@ def portcheck(i):
         if "DC" in devices[id]:
             motor[i].setType("DCMotor")
             motor[i].obj = DCMotor(port)
-            
+
+        wait(100)    
+        print ("--")
+        print(port, ":", devices[id], motor[i].getType(),motor[i].getSpeed(),motor[i].getAcc())
     except KeyError:
-        motor[i].stype("unkown")
+        motor[i].setType("unkown")
         print(port, ":", "Unknown device with ID", id)
-    wait(100)    
-    print ("--")
-    print(port, ":", devices[id], motor[i].getType(),motor[i].getSpeed(),motor[i].getAcc())
+    
 
 # ---- device  -------------------------------------------
     
