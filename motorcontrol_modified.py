@@ -25,6 +25,8 @@ dirMotorB = -1       # Direction 1 or -1
 
 autoacc = False      # accelarate continously when holding butten 
 
+lightValue = 0      # the initial light value, any number between 0 and 100
+
 # -----------------------------------------------
 #  Set general values
 # -----------------------------------------------
@@ -37,6 +39,9 @@ UP = "A+"
 DOWN = "A-"
 STOP = "A0"
 SWITCH = "CENTER"
+BUP = "B+"
+BDOWN = "B-"
+BSTOP = "B0"
 
 mode=1              # start with function number...
 watchdog = False    # "True" or "False": Stop motors when loosing remote connection
@@ -141,6 +146,40 @@ def function2():
     if timer[1].check(): 
         print("Do something")
 '''
+
+# -----------------------------------------------
+# updateLights
+# -----------------------------------------------
+
+def updateLights():
+    global lightValue
+    max = 100;
+    min = 0;
+    step = 10;
+
+    if CheckButton(BUP) and not CheckButton(BSTOP) :
+        lightValue += step
+
+    if CheckButton(BDOWN) and not CheckButton(BSTOP) :
+        lightValue -= step
+
+    if CheckButton(BSTOP) :
+        lightValue = min
+    
+    if lightValue > max:
+        lightValue = max
+    if lightValue < min:
+        lightValue = min
+    
+    for x in range(1,3):
+        if motor[x].getType() == "Light":
+            if lightValue == min:
+                motor[x].obj.off()
+            else:
+                motor[x].obj.on(lightValue)
+
+    wait (100)
+
 
 # -----------------------------------------------
 # general program routines and classes
@@ -272,7 +311,11 @@ def portcheck(i):
         if "Light" in devices[id]:
             motor[i].setType("Light")
             motor[i].obj = Light(port)
-            motor[i].obj.on(100)
+            if lightValue > 0:
+                motor[i].obj.on(lightValue)
+
+            global hasLights
+            hasLights = True
 
         wait(100)    
         print ("--")
@@ -327,6 +370,8 @@ timer[2] = delay(2)
 motor = [0,0,0]
 motor[1] = device(Port.A,dirMotorA)
 motor[2] = device(Port.B,dirMotorB)
+
+hasLights = False
 
 # get the port properties
 portcheck(1)
@@ -387,6 +432,8 @@ while True:
 
     if mode == 1 : function1()     
     if mode == 2 : function1()
+
+    if hasLights : updateLights()
     
     wait(10)
     
