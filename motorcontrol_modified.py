@@ -157,6 +157,8 @@ def updateLights():
     min = 0;
     step = 10;
 
+    waitBetweenSteps = 100;
+
     if CheckButton(BUP) and not CheckButton(BSTOP) :
         lightValue += step
 
@@ -164,7 +166,11 @@ def updateLights():
         lightValue -= step
 
     if CheckButton(BSTOP) :
-        lightValue = min
+        waitBetweenSteps = 300
+        if lightValue == min :
+            lightValue = max
+        else :
+            lightValue = min
     
     if lightValue > max:
         lightValue = max
@@ -178,7 +184,7 @@ def updateLights():
             else:
                 motor[x].obj.on(lightValue)
 
-    wait (100)
+    wait (waitBetweenSteps)
 
 
 # -----------------------------------------------
