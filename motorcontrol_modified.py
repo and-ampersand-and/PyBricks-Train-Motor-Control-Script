@@ -157,12 +157,14 @@ def updateLights():
     min = 0;
     step = 10;
 
-    waitBetweenSteps = 100;
+    waitBetweenSteps = 0;
 
     if CheckButton(BUP) and not CheckButton(BSTOP) :
+        waitBetweenSteps = 100
         lightValue += step
 
     if CheckButton(BDOWN) and not CheckButton(BSTOP) :
+        waitBetweenSteps = 100
         lightValue -= step
 
     if CheckButton(BSTOP) :
