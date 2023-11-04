@@ -25,6 +25,8 @@ dirMotorB = -1       # Direction 1 or -1
 
 autoacc = False      # accelarate continously when holding butten 
 
+lightValue = 0      # the initial light value, any number between 0 and 100
+
 # -----------------------------------------------
 #  Set general values
 # -----------------------------------------------
@@ -37,6 +39,9 @@ UP = "A+"
 DOWN = "A-"
 STOP = "A0"
 SWITCH = "CENTER"
+BUP = "B+"
+BDOWN = "B-"
+BSTOP = "B0"
 
 mode=1              # start with function number...
 watchdog = False    # "True" or "False": Stop motors when loosing remote connection
@@ -54,7 +59,7 @@ LED_B = Color.RED*0.5      # Remote Profil_B, color * brightness
 #  Import classes and functions
 # -----------------------------------------------
 
-from pybricks.pupdevices import DCMotor, Motor, Remote
+from pybricks.pupdevices import DCMotor, Motor, Remote, Light
 from pybricks.parameters import Port, Stop, Button, Color
 from pybricks.hubs import CityHub
 from pybricks.tools import wait, StopWatch
@@ -143,6 +148,48 @@ def function2():
 '''
 
 # -----------------------------------------------
+# updateLights
+# -----------------------------------------------
+
+def updateLights():
+    global lightValue
+    max = 100;
+    min = 0;
+    step = 10;
+
+    waitBetweenSteps = 0;
+
+    if CheckButton(BUP) and not CheckButton(BSTOP) :
+        waitBetweenSteps = 100
+        lightValue += step
+
+    if CheckButton(BDOWN) and not CheckButton(BSTOP) :
+        waitBetweenSteps = 100
+        lightValue -= step
+
+    if CheckButton(BSTOP) :
+        waitBetweenSteps = 300
+        if lightValue == min :
+            lightValue = max
+        else :
+            lightValue = min
+    
+    if lightValue > max:
+        lightValue = max
+    if lightValue < min:
+        lightValue = min
+    
+    for x in range(1,3):
+        if motor[x].getType() == "Light":
+            if lightValue == min:
+                motor[x].obj.off()
+            else:
+                motor[x].obj.on(lightValue)
+
+    wait (waitBetweenSteps)
+
+
+# -----------------------------------------------
 # general program routines and classes
 # -----------------------------------------------
 
@@ -211,7 +258,7 @@ def drive():
                 motor[x].obj.run(s*motor[x].getSpeed()) #  in 2.7
             if motor[x].getType() == "DCMotor" : 
                 motor[x].obj.dc(s) 
-            if v == 0 and motor[x].getType() != "---":  
+            if v == 0 and (motor[x].getType() == "Motor" or motor[x].getType() == "DCMotor"):  
                 print("stop",x)
                 motor[x].obj.stop()      
             #if motor[x].getDir() != 0 and motor[x].getType() == "DCMotor" : motor[x].obj.dc(s) 
@@ -224,6 +271,7 @@ def portcheck(i):
     devices = {
     1: "Wedo 2.0 DC Motor",
     2: "Train DC Motor",
+    8: "Light",
     38: "BOOST Interactive Motor",
     46: "Technic Large Motor",
     47: "Technic Extra Large Motor",
@@ -267,13 +315,23 @@ def portcheck(i):
         if "DC" in devices[id]:
             motor[i].setType("DCMotor")
             motor[i].obj = DCMotor(port)
-            
+
+        if "Light" in devices[id]:
+            motor[i].setType("Light")
+            motor[i].obj = Light(port)
+            if lightValue > 0:
+                motor[i].obj.on(lightValue)
+
+            global hasLights
+            hasLights = True
+
+        wait(100)    
+        print ("--")
+        print(port, ":", devices[id], motor[i].getType(),motor[i].getSpeed(),motor[i].getAcc())
     except KeyError:
-        motor[i].stype("unkown")
+        motor[i].setType("unkown")
         print(port, ":", "Unknown device with ID", id)
-    wait(100)    
-    print ("--")
-    print(port, ":", devices[id], motor[i].getType(),motor[i].getSpeed(),motor[i].getAcc())
+    
 
 # ---- device  -------------------------------------------
     
@@ -320,6 +378,8 @@ timer[2] = delay(2)
 motor = [0,0,0]
 motor[1] = device(Port.A,dirMotorA)
 motor[2] = device(Port.B,dirMotorB)
+
+hasLights = False
 
 # get the port properties
 portcheck(1)
@@ -380,6 +440,8 @@ while True:
 
     if mode == 1 : function1()     
     if mode == 2 : function1()
+
+    if hasLights : updateLights()
     
     wait(10)
     
