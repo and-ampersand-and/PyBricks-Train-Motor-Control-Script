@@ -27,6 +27,10 @@ autoacc = False      # accelarate continously when holding butten
 
 lightValue = 0      # the initial light value, any number between 0 and 100
 
+shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
+
+broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
+
 # -----------------------------------------------
 #  Set general values
 # -----------------------------------------------
@@ -333,6 +337,15 @@ def portcheck(i):
         print(port, ":", "Unknown device with ID", id)
     
 
+# ---- broadcast -----------------------------------------
+
+def broadcastData():
+    global v
+
+    data = ( v )
+    hub.ble.broadcast(data)
+
+
 # ---- device  -------------------------------------------
     
 class device():
@@ -367,7 +380,7 @@ vold = 0
 # Ininitialize
 # -----------------------------------------------
 
-hub = CityHub()
+hub = CityHub(broadcast_channel=broadcastChannel)
 
 #define timers
 timer = [0,0,0]
@@ -442,6 +455,8 @@ while True:
     if mode == 2 : function1()
 
     if hasLights : updateLights()
+
+    if shouldBroadcast : broadcastData()
     
     wait(10)
     
