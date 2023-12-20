@@ -27,7 +27,7 @@ autoacc = False      # accelarate continously when holding butten
 
 lightValue = 0      # the initial light value, any number between 0 and 100
 
-shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
+shouldBroadcast = True    # whether the hub should broadcast data for a second hub to observe
 
 broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
 
@@ -251,7 +251,9 @@ class delay:
 def drive():
     global vold
     global v
-    print (v)
+    
+    if shouldBroadcast : broadcastData()
+    
     if vold != v:
         # for each motor 1,2 
         for x in range(1,3):
@@ -342,7 +344,9 @@ def portcheck(i):
 def broadcastData():
     global v
 
-    data = ( v )
+    speed = v
+
+    data = ( speed )
     hub.ble.broadcast(data)
 
 
@@ -455,8 +459,6 @@ while True:
     if mode == 2 : function1()
 
     if hasLights : updateLights()
-
-    if shouldBroadcast : broadcastData()
     
     wait(10)
     

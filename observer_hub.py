@@ -1,5 +1,13 @@
+# -----------------------------------------------
+#  Set user defined values
+# -----------------------------------------------
 
 observeChannel = 1    # channel number to observe (0 to 255). Needs to match the value the primary hub is broadcasting on.
+
+# define direction of motors
+
+dirMotorA = 1       # Direction 1 or -1
+dirMotorB = -1       # Direction 1 or -1
 
 # -----------------------------------------------
 #  Import classes and functions
@@ -12,13 +20,35 @@ from pybricks.tools import wait, StopWatch
 from pybricks.iodevices import PUPDevice
 from uerrno import ENODEV
 
+# ----observe -----------------------------------------
+
+def observe():
+    global v
+
+    data = hub.ble.observe(observeChannel)
+
+    if data is None:
+        # No data has been received in the last 1 second.
+        hub.light.on(Color.YELLOW)
+        print('received nothing')
+    else:
+        # Data was received and is less that one second old.
+        hub.light.on(Color.GREEN)
+
+        speed = data
+
+        v = speed
+
+        drive()
+
+        print(speed)
+
 # ----drive -------------------------------------------
 
 def drive():
     global vold
     global v
-    print (v)
-    print (motor[1].obj.speed())
+
     if vold != v:
         # for each motor 1,2 
         for x in range(1,3):
@@ -135,7 +165,7 @@ vold = 0
 # Ininitialize
 # -----------------------------------------------
 
-hub = CityHub(observe_channels=[broadcastChannel])
+hub = CityHub(observe_channels=[observeChannel])
 
 #define motors
 motor = [0,0,0]
@@ -152,7 +182,7 @@ portcheck(2)
 
 while True:
 
-    #TODO: Observe here
-    
+    observe()
+
     wait(10)
     
