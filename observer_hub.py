@@ -9,7 +9,7 @@ observeChannel = 1    # channel number to observe (0 to 255). Needs to match the
 dirMotorA = 1       # Direction 1 or -1
 dirMotorB = -1       # Direction 1 or -1
 
-lightValue = 0      # the initial light value, any number between 0 and 100
+lightValue = 0      # the initial light value, any number between 0 and 100. This will get overridden by the broadcast hub
 
 # -----------------------------------------------
 #  Import classes and functions
@@ -26,6 +26,7 @@ from uerrno import ENODEV
 
 def observe():
     global v
+    global lightValue
 
     data = hub.ble.observe(observeChannel)
 
@@ -37,13 +38,31 @@ def observe():
         # Data was received and is less that one second old.
         hub.light.on(Color.GREEN)
 
-        speed = data
+        speed, light = data
 
         v = speed
+        lightValue = light
 
         drive()
+        updateLights()
 
-        print(speed)
+        print(lightValue)
+
+
+# -----------------------------------------------
+# updateLights
+# -----------------------------------------------
+
+def updateLights():
+    global lightValue
+
+    if hasLights:
+        for x in range(1,3):
+            if motor[x].getType() == "Light":
+                if lightValue == min:
+                    motor[x].obj.off()
+                else:
+                    motor[x].obj.on(lightValue)
 
 # ----drive -------------------------------------------
 
@@ -174,9 +193,12 @@ motor = [0,0,0]
 motor[1] = device(Port.A,dirMotorA)
 motor[2] = device(Port.B,dirMotorB)
 
+hasLights = False
+
 # get the port properties
 portcheck(1)
-portcheck(2)    
+portcheck(2)
+
 
 # -----------------------------------------------
 # main loop

@@ -182,13 +182,17 @@ def updateLights():
         lightValue = max
     if lightValue < min:
         lightValue = min
+
+    if CheckButton(BSTOP) or CheckButton(BUP) or CheckButton(BDOWN) :
+        if shouldBroadcast : broadcastData()
     
-    for x in range(1,3):
-        if motor[x].getType() == "Light":
-            if lightValue == min:
-                motor[x].obj.off()
-            else:
-                motor[x].obj.on(lightValue)
+    if hasLights:
+        for x in range(1,3):
+            if motor[x].getType() == "Light":
+                if lightValue == min:
+                    motor[x].obj.off()
+                else:
+                    motor[x].obj.on(lightValue)
 
     wait (waitBetweenSteps)
 
@@ -343,10 +347,12 @@ def portcheck(i):
 
 def broadcastData():
     global v
+    global lightValue
 
     speed = v
+    light = lightValue
 
-    data = ( speed )
+    data = ( speed, light )
     hub.ble.broadcast(data)
 
 
@@ -458,7 +464,7 @@ while True:
     if mode == 1 : function1()     
     if mode == 2 : function1()
 
-    if hasLights : updateLights()
+    if hasLights or shouldBroadcast : updateLights()
     
     wait(10)
     
