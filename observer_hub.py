@@ -9,6 +9,8 @@ observeChannel = 1    # channel number to observe (0 to 255). Needs to match the
 dirMotorA = 1       # Direction 1 or -1
 dirMotorB = -1       # Direction 1 or -1
 
+lightValue = 0      # the initial light value, any number between 0 and 100
+
 # -----------------------------------------------
 #  Import classes and functions
 # -----------------------------------------------
