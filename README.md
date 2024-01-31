@@ -14,7 +14,11 @@ PyBricks: https://code.pybricks.com/
 
 I highly recommend this setup tutorial video by BatteryPoweredBricks: https://www.youtube.com/watch?v=sgDMOHEmgL0
 
-
+Installation instructions:
+1: Go to https://code.pybricks.com
+2: Install Pybricks on your Hub, instructions here: https://pybricks.com/install/technic-boost-city/
+3: Import motorcontrol_modified.py into pybricks, and run the code on your hub.
+4: Assuming the code ran, it should be saved to your hub. You can disconnect it from your computer and use it as normal.
 
 ## Customization
 
@@ -60,11 +64,11 @@ shouldBroadcast = False    # whether the hub should broadcast data for a second 
 broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
 ```
 
-These settings are only used for Hub-to-Hub communication, which allows you to control multiple hubs at the same time. This is useful if you have multiple locomotives on the same train. You will be able to accelerate/decelerate/stop them simultaniously.
+These settings are only used for Hub-to-Hub communication, which allows you to control multiple hubs at the same time. This is useful if you have multiple locomotives on the same train. You will be able to accelerate/decelerate/stop them simultaneously.
 
 Setting shouldBroadcast to True causes this hub to broadcast the motor speed and light brightness. Broadcast channel is the channel, between 0 and 255, on which to broadcast on. It must match the observeChannel setting on the observer_hub.
 
-More information about Hub-to-Hub communcation, see the Multi-unit section below.
+More information about Hub-to-Hub communication, see the Multi-unit section below.
 
 ```
 mode=1              # start with function number...
@@ -91,4 +95,27 @@ You can make the Hub only connect to a specific remote. You can name the remote 
 
 ## Multi-unit control via Hub-to-Hub communication
 
-PyBricks allows hubs to broadcast and receive data over bluetooth.
+PyBricks allows hubs to broadcast and receive data over bluetooth. This script uses this broadcast to allow you to control multiple hubs at the same time, mimicking real-life multi-unit trains. You can have multiple powered units on a train and control them simultaneously, accelerating and decelerating together.
+
+This is useful if you need a second locomotive (or a powered piece of rolling stock) to allow for longer trains. You can have any number of hubs working simultaneously, allowing for super long and heavy trains.
+
+Many people buy two of the current passenger train sets to run a full consist with a locomotive at each end, and with this script you can utilize the motors in both locomotives.
+
+I highly recommend all powered units use the same motors/wheels/gear ratios in order to ensure they all move at the same speed.
+
+### Setup
+
+One of your hubs will be the main hub, referred to as the broadcaster hub. This hub will connect to the remote and regulate the speed for the rest of the train. The rest will be observers, who listen to the broadcaster.
+
+The broadcaster hub will need `motorcontrol_modified.py` installed on it. Set `shouldBroadcast` to True, and set `broadcastChannel` to any value you want. If you want to have multiple different sets of Multi-unit setups, each train will need it's own channel.
+
+Each observer hub will need the `observer_hub.py` script installed on it. Set the `observerChannel` to the broadcastChannel. Make sure to verify the `dirMotor` values are correct for whichever direction each locomotive will be facing.
+
+### In operation
+
+When the broadcaster hub starts, it will begin broadcasting it's current speed and lightvalue.
+
+When you start an observer hub, the led will turn yellow to indicate it is listening but not receiving any data. Once it starts receiving data, the led will return green.
+
+There is sometimes a slight lag between broadcasting and observing. It is usually unnoticeable, but is most noticeable if one of the hubs is connected to a computer via bluetooth. In testing, this seems to have very little affect on performance while running a train.
+
