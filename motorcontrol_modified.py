@@ -27,7 +27,7 @@ autoacc = False      # accelarate continously when holding butten
 
 lightValue = 0      # the initial light value, any number between 0 and 100
 
-shouldBroadcast = True    # whether the hub should broadcast data for a second hub to observe
+shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
 
 broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
 
