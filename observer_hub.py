@@ -22,6 +22,11 @@ from pybricks.tools import wait, StopWatch
 from pybricks.iodevices import PUPDevice
 from uerrno import ENODEV
 
+# Color and brightness of Hub LEDs
+LEDreceiving = Color.GREEN*0.3       # if Hub connected, color * brightness
+LEDnotreceiving = Color.YELLOW*0.5      # if Hub is not connect, color * brightness
+
+
 # ----observe -----------------------------------------
 
 def observe():
@@ -32,11 +37,11 @@ def observe():
 
     if data is None:
         # No data has been received in the last 1 second.
-        hub.light.on(Color.YELLOW)
+        hub.light.on(LEDnotreceiving)
         print('received nothing')
     else:
         # Data was received and is less that one second old.
-        hub.light.on(Color.GREEN)
+        hub.light.on(LEDreceiving)
 
         speed, light = data
 
