@@ -2,9 +2,11 @@
 
 This script allows you to control Lego Trains via PyBricks without using the official Powered Up App.
 
-The original version of this script was written by eurobrick user Lok24. It automatically detects what motors your hub is using and provides a number of quality of life improvements over the standard Lego firmware.
+The original version of this script was written by eurobrick user Lok24. It automatically detects what motors your hub is using and provides a number of quality of life improvements over the standard Lego firmware, such as smooth acceleration.
 
-I have added a few additional features to the script, specifically support for the official Powered Up lights as well as Hub to Hub communication, which allows you to control multiple locomotives on one train simultaniously.
+It also adds better support for technic motors. Using the default firmware and a PoweredUp remote, holding the +/- buttons causes technic motors to run at full speed, and releasing the button causes the motor to stop. This script makes those motors work like the regular Lego train motor, allowing you to accelerate or decelerate these motors freely and maintaining the speed when you release the button.
+
+I have added a few additional features to the script, specifically support for the official Powered Up lights as well as Hub to Hub communication, which allows you to control multiple locomotives on one train simultaneously.
 
 More information about the original script from Lok24: https://www.eurobricks.com/forum/index.php?/forums/topic/187081-control-your-trains-without-smart-device-with-pybricks/
 
@@ -95,7 +97,11 @@ You can make the Hub only connect to a specific remote. You can name the remote 
 
 ## Multi-unit control via Hub-to-Hub communication
 
-PyBricks allows hubs to broadcast and receive data over bluetooth. This script uses this broadcast to allow you to control multiple hubs at the same time, mimicking real-life multi-unit trains. You can have multiple powered units on a train and control them simultaneously, accelerating and decelerating together.
+Maybe you want a train with multiple powered locomotives, all moving in sync. Such as a passenger train with a locomotive at each end (for instance, combining two copies of any of the official Lego passenger trains). Maybe you want multiple locomotives pulling a big freight train, like often happens in real life. Or, you want to add a powered piece of rolling stock to a train to give it some extra pulling power.
+
+The default Lego firmware can do this by having one remote connect to multiple hubs. However, you can't utilize some of QoL features of this script, like reversing motor direction, smooth acceleration, or better support for technic motors.
+
+PyBricks by default does not allow one remote to connect to multiple hubs. However, PyBricks allows hubs to broadcast and receive data over bluetooth. This script uses that broadcasting power to to allow you to control multiple hubs at the same time, allowing for simultaneous control of multiple locomotives on one train, accelerating and decelerating them together.
 
 This is useful if you need a second locomotive (or a powered piece of rolling stock) to allow for longer trains. You can have any number of hubs working simultaneously, allowing for super long and heavy trains.
 
