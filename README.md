@@ -13,7 +13,9 @@ More information about the original script from Lok24: https://www.eurobricks.co
 PyBricks: https://code.pybricks.com/
 
 Special thanks to:
+
 Eurobricks user Lok24 for writing the origional version of this script
+
 Youtuber BatteryPoweredBricks for help testing
 
 ## Setup
