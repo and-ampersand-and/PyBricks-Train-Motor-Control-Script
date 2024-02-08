@@ -4,7 +4,7 @@
 # uses https://code.pybricks.com/ , LEGO City hub, LEGO remote control
 # connect 1 or 2 motors of any kind to Port A and/or B
 #
-# Version 2_9
+# Version 3_0
 # -----------------------------------------------/
 from pybricks.parameters import * # Color
 
@@ -26,6 +26,10 @@ dirMotorB = -1       # Direction 1 or -1
 autoacc = False      # accelarate continously when holding butten 
 
 lightValue = 0      # the initial light value, any number between 0 and 100
+
+shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
+
+broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
 
 # -----------------------------------------------
 #  Set general values
@@ -178,13 +182,17 @@ def updateLights():
         lightValue = max
     if lightValue < min:
         lightValue = min
+
+    if CheckButton(BSTOP) or CheckButton(BUP) or CheckButton(BDOWN) :
+        if shouldBroadcast : broadcastData()
     
-    for x in range(1,3):
-        if motor[x].getType() == "Light":
-            if lightValue == min:
-                motor[x].obj.off()
-            else:
-                motor[x].obj.on(lightValue)
+    if hasLights:
+        for x in range(1,3):
+            if motor[x].getType() == "Light":
+                if lightValue == min:
+                    motor[x].obj.off()
+                else:
+                    motor[x].obj.on(lightValue)
 
     wait (waitBetweenSteps)
 
@@ -247,7 +255,9 @@ class delay:
 def drive():
     global vold
     global v
-    print (v)
+    
+    if shouldBroadcast : broadcastData()
+    
     if vold != v:
         # for each motor 1,2 
         for x in range(1,3):
@@ -333,6 +343,19 @@ def portcheck(i):
         print(port, ":", "Unknown device with ID", id)
     
 
+# ---- broadcast -----------------------------------------
+
+def broadcastData():
+    global v
+    global lightValue
+
+    speed = v
+    light = lightValue
+
+    data = ( speed, light )
+    hub.ble.broadcast(data)
+
+
 # ---- device  -------------------------------------------
     
 class device():
@@ -367,7 +390,7 @@ vold = 0
 # Ininitialize
 # -----------------------------------------------
 
-hub = CityHub()
+hub = CityHub(broadcast_channel=broadcastChannel)
 
 #define timers
 timer = [0,0,0]
@@ -441,7 +464,7 @@ while True:
     if mode == 1 : function1()     
     if mode == 2 : function1()
 
-    if hasLights : updateLights()
+    if hasLights or shouldBroadcast : updateLights()
     
     wait(10)
     
