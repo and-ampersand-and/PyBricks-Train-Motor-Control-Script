@@ -2,7 +2,7 @@
 
 This script allows you to control Lego Trains via PyBricks without using the official Powered Up App.
 
-The original version of this script was written by eurobrick user Lok24. It automatically detects what motors your hub is using and provides a number of quality of life improvements over the standard Lego firmware, such as smooth acceleration.
+The original version of this script was written by Eurobrick user Lok24. It automatically detects what motors your hub is using and provides a number of quality of life improvements over the standard Lego firmware, such as smooth acceleration.
 
 It also adds better support for technic motors. Using the default firmware and a PoweredUp remote, holding the +/- buttons causes technic motors to run at full speed, and releasing the button causes the motor to stop. This script makes those motors work like the regular Lego train motor, allowing you to accelerate or decelerate these motors freely and maintaining the speed when you release the button.
 
@@ -11,6 +11,10 @@ I have added a few additional features to the script, specifically support for t
 More information about the original script from Lok24: https://www.eurobricks.com/forum/index.php?/forums/topic/187081-control-your-trains-without-smart-device-with-pybricks/
 
 PyBricks: https://code.pybricks.com/
+
+Special thanks to:
+Eurobricks user Lok24 for writing the origional version of this script
+Youtuber BatteryPoweredBricks for help testing
 
 ## Setup
 
@@ -96,6 +100,8 @@ remoteName = ""     # connect this remote only
 You can make the Hub only connect to a specific remote. You can name the remote using the official Lego Powered Up app.
 
 ## Multi-unit control via Hub-to-Hub communication
+
+Video Summary by BatteryPoweredBricks: https://www.youtube.com/watch?v=RLTdA9oc_tw
 
 Maybe you want a train with multiple powered locomotives, all moving in sync. Such as a passenger train with a locomotive at each end (for instance, combining two copies of any of the official Lego passenger trains). Maybe you want multiple locomotives pulling a big freight train, like often happens in real life. Or, you want to add a powered piece of rolling stock to a train to give it some extra pulling power.
 
