@@ -28,6 +28,7 @@ autoacc = False      # accelarate continously when holding butten
 lightValue = 0      # the initial light value, any number between 0 and 100
 
 shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
+shouldBroadcastSecondTrain = True
 
 broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
 
@@ -150,6 +151,63 @@ def function2():
     if timer[1].check(): 
         print("Do something")
 '''
+
+# -----------------------------------------------
+#  set second train speed
+# -----------------------------------------------
+
+def checkSecondTrainSpeed():
+    vmax = profile[mode].vmax
+    vmin = profile[mode].vmin
+    accdelay =  profile[mode].acc
+    step = profile[mode].step
+  
+    global v2
+   
+    if CheckButton(BUP) and not CheckButton(BSTOP) : 
+        for x in range (1, step + 1):
+            v2 = v2 + 1
+            if v2 > vmax :
+                v2 = vmax
+            if v2 > 0 and v2 < vmin:    
+                v2 = vmin
+            if abs(v2) < vmin:
+                v2 = 0
+            broadcastData()
+            wait (accdelay)  
+            if v2==0: 
+                break 
+        # further acceleration if button keeps pressed
+        while autoacc == False and CheckButton(BUP) :    
+            wait (100)
+        # avoid changing direction when reaching "0"     
+        while v2 == 0 and  CheckButton(BUP):  
+            wait (100)
+
+    if CheckButton(BDOWN) and not CheckButton(BSTOP):
+        for x in range (1, step + 1):
+            v2 = v2-1
+            if v2 < vmax*-1 :
+                v2 = vmax*-1
+            if v2 < 0 and v2 > vmin*-1:    
+                v2 = vmin*-1
+            if abs(v2) < vmin :
+                v2 = 0   
+            broadcastData()
+            wait (accdelay)  
+            if v2==0: 
+                break 
+        # further acceleration if button keeps pressed
+        while autoacc == False and CheckButton(BDOWN) :    
+            wait (100)
+        # avoid changing direction when reaching "0"
+        while v2 == 0 and  CheckButton(BDOWN) :    
+            wait (100)
+  
+    if CheckButton(BSTOP): 
+        v2 = 0
+        broadcastData()
+        wait (100)    
 
 # -----------------------------------------------
 # updateLights
@@ -347,9 +405,14 @@ def portcheck(i):
 
 def broadcastData():
     global v
+    global v2
     global lightValue
 
-    speed = v
+    if shouldBroadcastSecondTrain : 
+        speed = v2
+    else :
+        speed = v
+    
     light = lightValue
 
     data = ( speed, light )
@@ -384,6 +447,7 @@ class device():
 
 v = 0
 vold = 0
+v2 = 0
 #remoteConnected = False
 
 # -----------------------------------------------
@@ -464,7 +528,9 @@ while True:
     if mode == 1 : function1()     
     if mode == 2 : function1()
 
-    if hasLights or shouldBroadcast : updateLights()
+    if shouldBroadcastSecondTrain : checkSecondTrainSpeed()
+    else :
+        if hasLights or shouldBroadcast : updateLights()
     
     wait(10)
     
