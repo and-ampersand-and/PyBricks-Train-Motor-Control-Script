@@ -25,7 +25,7 @@ dirMotorB = -1       # Direction 1 or -1
 
 autoacc = False      # accelarate continously when holding butten 
 
-lightValue = 0      # the initial light value, any number between 0 and 100
+lightValue = 100      # the initial light value, any number between 0 and 100
 
 shouldBroadcast = True    # whether the hub should broadcast data for a second hub to observe
 shouldBroadcastSecondTrain = True
