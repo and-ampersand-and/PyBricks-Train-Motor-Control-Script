@@ -27,7 +27,7 @@ autoacc = False      # accelarate continously when holding butten
 
 lightValue = 0      # the initial light value, any number between 0 and 100
 
-shouldBroadcast = False    # whether the hub should broadcast data for a second hub to observe
+shouldBroadcast = True    # whether the hub should broadcast data for a second hub to observe
 shouldBroadcastSecondTrain = True
 
 broadcastChannel = 1    # channel number to broadcast on (0 to 255). Needs to match the value the second hub is observing.
@@ -408,14 +408,12 @@ def broadcastData():
     global v2
     global lightValue
 
-    if shouldBroadcastSecondTrain : 
-        speed = v2
-    else :
-        speed = v
-    
+    speed = v
+    altSpeed = v2
+
     light = lightValue
 
-    data = ( speed, light )
+    data = ( speed, light, altSpeed )
     hub.ble.broadcast(data)
 
 

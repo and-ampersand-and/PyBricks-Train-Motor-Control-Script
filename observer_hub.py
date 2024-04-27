@@ -12,6 +12,7 @@
 # -----------------------------------------------
 
 observeChannel = 1    # channel number to observe (0 to 255). Needs to match the value the primary hub is broadcasting on.
+shouldMatchBroadcasterSpeed = True  # True if should match speed of broadcasting hub. False if should use the B side of remote to set speed
 
 # define direction of motors
 
@@ -52,15 +53,17 @@ def observe():
         # Data was received and is less that one second old.
         hub.light.on(LEDreceiving)
 
-        speed, light = data
+        speed, light, altSpeed = data
 
-        v = speed
+        if shouldMatchBroadcasterSpeed:
+            v = speed
+        else:
+            v = altSpeed
+            
         lightValue = light
 
         drive()
         updateLights()
-
-        print(lightValue)
 
 
 # -----------------------------------------------
