@@ -133,3 +133,22 @@ When you start an observer hub, the led will turn yellow to indicate it is liste
 
 There is sometimes a slight lag between broadcasting and observing. It is usually unnoticeable, but is most noticeable if one of the hubs is connected to a computer via bluetooth. In testing, this seems to have very little affect on performance while running a train.
 
+# Troubleshooting
+
+Multiple users have observed issues using L-Motors with this script, including me. These seem to be erratic, with the script working sometimes but not always. I've attempted to fix it a couple times but being unable to consistently recreate it has made that very difficult.
+
+The error is that the first time you press a direction on the remote, the script will crash and the hub will start blinking blue. Pressing the green button on the hub will launch the script again, but it will likely keep crashing.
+
+To fix this issue, I recommend rolling back your PyBricks firmware to 3.2.3, which has worked for me. You'll have to use an older version of this script that doesn't include Broadcasting compatibility.
+
+### Step 1: Download PyBricks 3.2.3
+Download pybricks-cityhub-v3.2.3.zip from Pybrick's github page here: https://github.com/pybricks/pybricks-micropython/releases/tag/v3.2.3
+
+### Step 2: Re-install PyBricks on your Hub with the old firmware
+Re-install Pybricks on your hub. But on the first step under 'Select your hub' (https://youtu.be/sgDMOHEmgL0?t=103) you'll want to upload the ZIP file you downloaded under 'Advanced'. After you do this, Pybricks code will keep asking you if you want to update to the latest firmware. You'll want to ignore that.
+
+### Step 3: Use an older version of the script
+
+You will need this older version of the script: https://github.com/and-ampersand-and/PyBricks-Train-Motor-Control-Script/blob/0b5dc0766753b03aacfd82886135d69e5ef04071/motorcontrol_modified.py
+The newer version of the script has Broadcasting functionality that isn't compatible with PyBricks 3.2.3
+
